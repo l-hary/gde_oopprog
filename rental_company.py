@@ -1,4 +1,5 @@
 from car_abc import Car
+from rental_manager import RentalManager
 
 
 class RentalCompany:
@@ -18,6 +19,7 @@ class RentalCompany:
         """
         self.name = name
         self._cars = []
+        self.rental_manager = RentalManager()
 
     def __add__(self, car: Car):
         """
