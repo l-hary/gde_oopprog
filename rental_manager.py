@@ -1,12 +1,12 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from passenger_car import PassengerCar
 from truck import Truck
 
 
 class RentalManager:
-    def __init__(self):
-        self.rentals = []
+    def __init__(self) -> None:
+        self.rentals: list["Rental"] = []
 
     def __str__(self) -> str:
         return "\n".join(str(rental) for rental in self.rentals)
@@ -22,8 +22,9 @@ class RentalManager:
         Raises:
             ValueError: If the start date is in the past
         """
-        if car.is_rented:
-            raise ValueError("The car is already rented and cannot be booked.")
+        for rental in self.rentals:
+            if rental.car == car and rental.date == start_date.date():
+                raise ValueError("The car is already booked for that date.")
         rental = Rental(car, start_date)
         self.rentals.append(rental)
 
@@ -35,33 +36,26 @@ class RentalManager:
             rental (Rental): The rental to be removed
         """
         if rental in self.rentals:
-            rental.terminate()
             self.rentals.remove(rental)
         else:
-            raise ValueError("Rental not found in the manager.")
+            raise ValueError("Rental not found.")
 
 
 class Rental:
     def __init__(self, car: PassengerCar | Truck, start_date: datetime) -> None:
         self.car = car
-        self.start_date = self.validate_date(start_date)
-        # car should only be booked for exactly one day per the specification
-        self.end_date = self.start_date + timedelta(days=1)
-        self.car.is_rented = True
+        # the car should only be booked for a (calendar) day, so end date is not tracked
+        self.date = self.validate_date(start_date).date()
 
     def __str__(self) -> str:
-        return (
-            f"Rental of {self.car} from "
-            f"{self.start_date.strftime('%Y-%m-%d')} to "
-            f"{self.end_date.strftime('%Y-%m-%d')}"
-        )
+        return f"Rental of {self.car} on {self.date.strftime('%m/%d/%Y')}"
 
     def validate_date(self, start_date: datetime) -> datetime:
         """
         Validates the rental date to ensure it is in the future and not in the past.
 
         Args:
-            date (datetime): The date to validate
+            start_date (datetime): The date to validate
 
         Returns:
             datetime: The validated date
@@ -69,17 +63,7 @@ class Rental:
         Raises:
             ValueError: If the date is in the past
         """
-
-        if start_date < datetime.now():
+        today = datetime.now().date()
+        if start_date.date() < today:
             raise ValueError("The rental date cannot be in the past.")
         return start_date
-
-    def terminate(self) -> None:
-        """
-        Terminates the rental, marking the car as not rented.
-
-        This method should be called when the rental period ends or is canceled.
-        """
-        assert self.car is not None
-        self.car.is_rented = False
-        self.car = None
