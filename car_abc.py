@@ -31,7 +31,6 @@ class Car(ABC):
         self.license_plate = license_plate
         self.car_type = car_type
         self.rental_cost = rental_cost
-        self._is_rented = False
 
     def __str__(self):
         """
@@ -60,23 +59,3 @@ class Car(ABC):
             NotImplementedError: If called directly on the abstract class
         """
         pass
-
-    @property
-    def is_rented(self) -> bool:
-        """
-        Property to check if the car is currently rented.
-
-        Returns:
-            bool: True if the car is currently rented, False otherwise
-        """
-        return self._is_rented
-
-    @is_rented.setter
-    def is_rented(self, value: bool):
-        """
-        Setter to update the rental status of the car.
-
-        Args:
-            value (bool): The new rental status (True for rented, False for available)
-        """
-        self._is_rented = value
