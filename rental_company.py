@@ -25,6 +25,7 @@ class RentalCompany:
         self._cars = []
         self.rental_manager = RentalManager()
 
+    # TODO add is not self documenting, implement add_car method for clarity
     def __add__(self, car: PassengerCar | Truck) -> "RentalCompany":
         """
         Add a car to the rental company's fleet.
@@ -40,6 +41,7 @@ class RentalCompany:
         self._cars.append(car)
         return self
 
+    # TODO same as __add__, implement remove_car method for clarity
     def __sub__(self, car: PassengerCar | Truck) -> "RentalCompany":
         """
         Remove a car from the rental company's fleet.
@@ -62,7 +64,7 @@ class RentalCompany:
         return self.name
 
     @property
-    def cars(self) -> list[Car]:
+    def cars(self) -> list[PassengerCar | Truck]:
         """
         Returns the list of cars in the rental company's fleet.
 
